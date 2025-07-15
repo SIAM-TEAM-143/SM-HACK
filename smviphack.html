@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SIAM Login</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 90%;
+      max-width: 400px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    input {
+      background: black;
+      color: white;
+      border: 2px solid red;
+    }
+    button {
+      background: red;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .container {
+      background: #111;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px red;
+      max-width: 500px;
+    }
+    #prediction-page { display: none; }
+    .error { color: red; display: none; }
+    .box { border: 1px solid red; padding: 5px 10px; margin: 5px; border-radius: 5px; }
+    .red { color: #f44; } .green { color: #4f4; } .violet { color: #c6f; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="login-box">
+  <h2>SIAM Login</h2>
+  <input type="email" id="email" placeholder="Enter Gmail" />
+  <input type="password" id="password" placeholder="Enter Password" />
+  <button onclick="checkLogin()">Login</button>
+  <p class="error" id="error-message">Wrong Email or Password or Blocked</p>
+</div>
+
+<div class="container" id="prediction-page">
+  <h2> Prediction </h2>
+  <p id="result">PERIOD: <span class="box">--</span></p>
+  <p id="signal">SIGNAL: <span class="box">--</span></p>
+  <p id="prediction">PREDICTED: <span class="box">--/--</span></p>
+  <p id="live-result">WAITING...</p>
+  <button onclick="manualFetch()">Predict</button>
+</div>
+
+<script>
+  function checkLogin() {
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value.trim();
+    const device = navigator.userAgent;
+
+    // Get allowed logins from localStorage
+    let users = JSON.parse(localStorage.getItem("siam_generated") || "[]");
+    let blocked = JSON.parse(localStorage.getItem("siam_blocked") || "[]");
+
+    const validUser = users.find(u => u.email === email && u.pass === pass);
+
+    if (validUser && !blocked.includes(email)) {
+      // Add to active users
+      let active = JSON.parse(localStorage.getItem("siam_active") || "[]");
+      if (!active.find(u => u.email === email)) {
+        active.push({ email, model: device });
+        localStorage.setItem("siam_active", JSON.stringify(active));
+      }
+
+      document.getElementById("login-box").style.display = "none";
+      document.getElementById("prediction-page").style.display = "block";
+      startAutoFetch();
+    } else {
+      document.getElementById("error-message").style.display = "block";
+    }
+  }
+
+  // --- Prediction Logic ---
+  const API_URL = 'https://api.bdg88zf.com/api/webapi/GetGameIssue';
+  const REQUEST_DATA = {
+    typeId: 1,
+    language: 0,
+    random: "e7fe6c090da2495ab8290dac551ef1ed",
+    signature: "1F390E2B2D8A55D693E57FD905AE73A7",
+    timestamp: 1723726679
+  };
+  let lastPeriod = null;
+  let previousPredictions = [];
+
+  function getColorFromNumber(num) {
+    const map = {
+      '1': 'green', '2': 'red', '3': 'green', '4': 'red',
+      '5': 'violet', '6': 'red', '7': 'green', '8': 'red',
+      '9': 'green', '0': 'violet'
+    };
+    return map[num] || 'red';
+  }
+
+  function generatePrediction(period) {
+    let sum = period.split('').reduce((a, b) => a + parseInt(b), 0);
+    let size = (sum % 3 === 0) ? "Big" : ((sum % 3 === 1) ? "Small" : "Big");
+    let n1 = Math.floor(Math.random() * 10);
+    let n2 = Math.floor(Math.random() * 10);
+    return { size, pred: `${n1}/${n2}` };
+  }
+
+  function updateUI(period, size, pred) {
+    let colors = pred.split('/').map(n => getColorFromNumber(n));
+    document.getElementById("result").innerHTML = `PERIOD: <span class="box">${period}</span>`;
+    document.getElementById("signal").innerHTML = `SIGNAL: <span class="box ${size.toLowerCase()}">${size}</span>`;
+    document.getElementById("prediction").innerHTML = `PREDICTED: 
+      <span class="box" style="color:${colors[0]}">${pred[0]}</span> / 
+      <span class="box" style="color:${colors[1]}">${pred[2]}</span>`;
+    document.getElementById("live-result").innerText = " Live";
+  }
+
+  function fetchPrediction() {
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(REQUEST_DATA)
+    })
+    .then(res => res.json())
+    .then(data => {
+      let period = data?.data?.issueNumber || "Unknown";
+      if (period !== lastPeriod) {
+        lastPeriod = period;
+        const { size, pred } = generatePrediction(period);
+        updateUI(period, size, pred);
+      } else {
+        document.getElementById("live-result").innerText = " Waiting...";
+      }
+    })
+    .catch(() => {
+      document.getElementById("live-result").innerText = " Error loading";
+    });
+  }
+
+  function startAutoFetch() {
+    fetchPrediction();
+    setInterval(fetchPrediction, 5000);
+  }
+
+  function manualFetch() {
+    fetchPrediction();
+  }
+</script>
+</body>
+</html>
