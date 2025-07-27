@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AMAR CLUB VIP SIGNAL</title>
+  <style>
+    /* Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #933a63);
+      color: #ffe6ff;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    /* Bubble animation BG */
+    #bg {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+      top: 0; left: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, #0f2027, #933a63);
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation-name: rise;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.3);
+        opacity: 0;
+      }
+    }
+
+    /* Password container */
+    #password-container {
+      z-index: 10;
+      background: rgba(255 255 255 / 0.05);
+      border: 2px solid #ff85d0;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 0 15px #ff85d0;
+      text-align: center;
+      width: 320px;
+    }
+
+    #password-container h2 {
+      margin-bottom: 20px;
+      color: #ff85d0;
+      text-shadow: 0 0 10px #ff85d0;
+    }
+
+    #password-input {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      text-align: center;
+      color: #933a63;
+      font-weight: bold;
+    }
+
+    #password-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #ff85d0;
+      border: none;
+      color: #2a002a;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #password-btn:hover {
+      background: #e655b3;
+    }
+
+    #password-error {
+      margin-top: 15px;
+      color: #ff6fbd;
+      font-weight: bold;
+      min-height: 24px;
+      user-select: text;
+    }
+
+    /* Main app container hidden by default */
+    #app {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+      padding: 20px;
+      background: rgba(255 255 255 / 0.05);
+      border-radius: 12px;
+      border: 2px solid #ff85d0;
+      box-shadow: 0 0 20px #ff85d0;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    #app h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: #ff85d0;
+      text-shadow: 0 0 15px #ff85d0;
+      user-select: none;
+      text-align: center;
+    }
+
+    #app .creator {
+      font-size: 14px;
+      color: #e18ac7;
+      margin-bottom: 20px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .box {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* Digit input style */
+    input.digit {
+      width: 60px;
+      height: 60px;
+      font-size: 36px;
+      text-align: center;
+      border: 2px solid #ff85d0;
+      background: transparent;
+      color: #ff85d0;
+      border-radius: 10px;
+      transition: box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    input.digit:focus {
+      outline: none;
+      box-shadow: 0 0 15px #ff85d0;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 30px;
+      font-size: 18px;
+      background: #ff85d0;
+      color: #2a002a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #ff85d0;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 28px;
+      text-align: center;
+      padding: 15px;
+      border: 2px solid #ff85d0;
+      border-radius: 10px;
+      width: 100%;
+      animation: glow 2s infinite;
+      background: rgba(255 133 208, 0.1);
+      color: #ff85d0;
+      user-select: none;
+      min-height: 50px;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px #ff85d0; }
+      50% { box-shadow: 0 0 25px #ff85d0; }
+    }
+
+    .green { color: #00ff00; font-weight: bold; }
+    .red { color: #ff3333; font-weight: bold; }
+    .violet { color: violet; font-weight: bold; }
+    .big, .small { font-size: 24px; }
+
+    footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ff9adb;
+      user-select: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="bg"></div>
+
+  <div id="password-container">
+    <h2>🔒 Enter VIP Password</h2>
+    <input id="password-input" type="password" placeholder="Password" autofocus />
+    <button id="password-btn">Unlock</button>
+    <div id="password-error"></div>
+  </div>
+
+  <div id="app">
+    <h1>💎 AMAR CLUB VIP SIGNAL 💎</h1>
+    <div class="creator">🛠 MAKE BOY SIAM 🛠</div>
+
+    <div class="box" id="nums">
+      <input maxlength="1" class="digit" id="num1" type="text" inputmode="numeric" pattern="[0-9]*" />
+      <input maxlength="1" class="digit" id="num2" type="text" inputmode="numeric" pattern="[0-9]*" />
+    </div>
+    <div class="box" id="minus">
+      <input maxlength="1" class="digit" id="minus1" type="text" inputmode="numeric" pattern="[0-9]*" />
+      <input maxlength="1" class="digit" id="minus2" type="text" inputmode="numeric" pattern="[0-9]*" />
+    </div>
+    <div class="box">
+      <button onclick="calculate()">SIGNAL</button>
+      <button onclick="clearAll()"> Clear</button>
+    </div>
+    <div id="result">Result will appear here</div>
+
+    <footer>© AMAR CLUB SIGNAL SYSTEM 2025</footer>
+  </div>
+
+  <script>
+    const password = "siam-vip-xxx";
+
+    const passwordContainer = document.getElementById('password-container');
+    const app = document.getElementById('app');
+    const passwordInput = document.getElementById('password-input');
+    const passwordBtn = document.getElementById('password-btn');
+    const passwordError = document.getElementById('password-error');
+
+    passwordBtn.addEventListener('click', () => {
+      let entered = passwordInput.value.trim();
+      if (entered === password) {
+        passwordContainer.style.display = 'none';
+        app.style.display = 'flex';
+        passwordError.textContent = '';
+        // Autofocus first input on unlock
+        setTimeout(() => {
+          document.getElementById('num1').focus();
+        }, 100);
+      } else {
+        passwordError.textContent = '❌ Wrong password! Try again.';
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    // Allow enter key to submit password
+    passwordInput.addEventListener('keyup', e => {
+      if (e.key === 'Enter') passwordBtn.click();
+    });
+
+    // Auto move focus on digit input
+    const digitInputs = document.querySelectorAll('input.digit');
+
+    digitInputs.forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        let value = e.target.value;
+        // Keep only 1 digit (0-9)
+        value = value.replace(/[^0-9]/g, '');
+        e.target.value = value;
+
+        if (value.length === 1 && idx < digitInputs.length - 1) {
+          digitInputs[idx + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        // Backspace moves to previous input if current empty
+        if (e.key === 'Backspace' && e.target.value === '' && idx > 0) {
+          digitInputs[idx - 1].focus();
+        }
+      });
+    });
+
+    function calculate() {
+      // Convert inputs to numbers
+      let n1 = parseInt(document.getElementById("num1").value);
+      let n2 = parseInt(document.getElementById("num2").value);
+      let m1 = parseInt(document.getElementById("minus1").value);
+      let m2 = parseInt(document.getElementById("minus2").value);
+
+      if ([n1,n2,m1,m2].some(v => isNaN(v))) {
+        document.getElementById("result").innerHTML = "❗ Fill all 4 boxes!";
+        return;
+      }
+
+      let final = (n1 + n2) - m1 - m2;
+      let absFinal = Math.abs(final);
+
+      let size = absFinal >= 5 ? "Big" : "Small";
+      let sizeClass = size.toLowerCase();
+
+      let lastDigit = absFinal % 10;
+      let color = '';
+      let colorClass = '';
+
+      switch (lastDigit) {
+        case 0: case 5:
+          color = 'Violet'; colorClass = 'violet'; break;
+        case 1: case 3: case 7: case 9:
+          color = 'Green'; colorClass = 'green'; break;
+        case 2: case 4: case 6: case 8:
+          color = 'Red'; colorClass = 'red'; break;
+        default:
+          color = 'Unknown'; colorClass = ''; break;
+      }
+
+      document.getElementById("result").innerHTML = `
+        <span class="${sizeClass}">${final} = ${size}</span><br>
+        <span class="${colorClass}">${color}</span>
+      `;
+    }
+
+    function clearAll() {
+      digitInputs.forEach(input => input.value = '');
+      document.getElementById("result").innerHTML = "Result will appear here";
+      digitInputs[0].focus();
+    }
+
+    // Create bubbles dynamically for bg animation
+    const bg = document.getElementById('bg');
+    const bubbleCount = 25;
+
+    for (let i = 0; i < bubbleCount; i++) {
+      let bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      let size = Math.random() * 20 + 10;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = Math.random() * 100 + 'vw';
+      bubble.style.animationDuration = (Math.random() * 15 + 10) + 's';
+      bubble.style.animationDelay = (Math.random() * 15) + 's';
+      bubble.style.background = `rgba(255, 133, 208, ${Math.random() * 0.5 + 0.2})`;
+      bg.appendChild(bubble);
+    }
+  </script>
+</body>
+</html>
